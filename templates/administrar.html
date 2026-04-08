@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Administrar Personal</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Registros de Personal</h1>
+        <a href="/" class="administrar-link">← Volver al Registro</a>
+        <div class="separator"></div>
+
+        {% if registros %}
+        <table>
+            <thead>
+                <tr>
+                    <th>DNI</th>
+                    <th>Nombre</th>
+                    <th>Apellido</th>
+                    <th>Acción</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for persona in registros %}
+                <tr>
+                    <td>{{ persona[1] }}</td>
+                    <td>{{ persona[2] }}</td>
+                    <td>{{ persona[3] }}</td>
+                    <td>
+                        <form action="{{ url_for('eliminar_registro', dni=persona[1]) }}" method="post">
+                            <button type="submit" class="btn-eliminar" onclick="return confirm('¿Eliminar?')">Eliminar</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p style="text-align:center;">No hay registros todavía.</p>
+        {% endif %}
+    </div>
+</body>
+</html>
