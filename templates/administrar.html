@@ -2,6 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Administrar Personal</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
@@ -12,24 +13,23 @@
         <div class="separator"></div>
 
         {% if registros %}
-        <table>
+        <table border="1" style="width: 100%; border-collapse: collapse; margin-top: 20px;">
             <thead>
                 <tr>
                     <th>DNI</th>
                     <th>Nombre</th>
                     <th>Apellido</th>
+                    <th>Dirección</th>
+                    <th>Teléfono</th>
                     <th>Acción</th>
                 </tr>
             </thead>
             <tbody>
                 {% for persona in registros %}
                 <tr>
-                    <td>{{ persona[1] }}</td>
-                    <td>{{ persona[2] }}</td>
-                    <td>{{ persona[3] }}</td>
-                    <td>
+                    <td>{{ persona[1] }}</td> <td>{{ persona[2] }}</td> <td>{{ persona[3] }}</td> <td>{{ persona[4] }}</td> <td>{{ persona[5] }}</td> <td>
                         <form action="{{ url_for('eliminar_registro', dni=persona[1]) }}" method="post">
-                            <button type="submit" class="btn-eliminar" onclick="return confirm('¿Eliminar?')">Eliminar</button>
+                            <button type="submit" class="btn-eliminar" onclick="return confirm('¿Seguro que quieres eliminar?')">Eliminar</button>
                         </form>
                     </td>
                 </tr>
@@ -37,7 +37,7 @@
             </tbody>
         </table>
         {% else %}
-        <p style="text-align:center;">No hay registros todavía.</p>
+        <p style="text-align: center;">No hay registros todavía.</p>
         {% endif %}
     </div>
 </body>

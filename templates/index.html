@@ -4,60 +4,55 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro de Persona</title>
-    <link rel="stylesheet" href="/static/styles.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
     <div class="container">
         <h1>Registro de Personal</h1>
         
-        <a href="/administrar" class="administrar-link">Administrar Registros</a>
+        <a href="/administrar" class="administrar-link">Ver Registros Guardados</a>
         <div class="separator"></div>
-        <form action="/registrar" method="post">
+
+        <form action="/registrar" method="post" id="registroForm">
             <div class="form-group">
                 <label for="dni">DNI:</label>
-                <input type="text" id="dni" name="dni" required>
+                <input type="text" id="dni" name="dni" required placeholder="Ingrese DNI">
             </div>
             <div class="form-group">
                 <label for="nombre">Nombre:</label>
-                <input type="text" id="nombre" name="nombre" required>
+                <input type="text" id="nombre" name="nombre" required placeholder="Ingrese Nombre">
             </div>
             <div class="form-group">
                 <label for="apellido">Apellido:</label>
-                <input type="text" id="apellido" name="apellido" required>
+                <input type="text" id="apellido" name="apellido" required placeholder="Ingrese Apellido">
             </div>
             <div class="form-group">
                 <label for="direccion">Dirección:</label>
-                <input type="text" id="direccion" name="direccion">
+                <input type="text" id="direccion" name="direccion" placeholder="Calle, Av, Jr.">
             </div>
             <div class="form-group">
                 <label for="telefono">Teléfono:</label>
-                <input type="text" id="telefono" name="telefono">
+                <input type="text" id="telefono" name="telefono" placeholder="999 999 999">
             </div>
-            <button type="submit" onclick="mostrarMensaje()">Registrar</button>
+            <button type="submit" class="btn-main">Registrar Datos</button>
         </form>
     </div>
 
-    <!-- Modal para el mensaje de registro exitoso -->
-    <div id="modal" class="modal">
+    <div id="modal" class="modal-overlay">
         <div class="modal-content">
             <span class="close" onclick="cerrarMensaje()">&times;</span>
-            <p>¡Registro exitoso!</p>
+            <div class="success-icon">✅</div>
+            <p>¡Procesando Registro!</p>
         </div>
     </div>
 
-    <!-- Script para manejar el modal -->
     <script>
-        function mostrarMensaje() {
-            var modal = document.getElementById('modal');
-            modal.style.display = 'block';
-        }
-
+        document.getElementById('registroForm').onsubmit = function() {
+            document.getElementById('modal').style.display = 'flex';
+        };
         function cerrarMensaje() {
-            var modal = document.getElementById('modal');
-            modal.style.display = 'none';
+            document.getElementById('modal').style.display = 'none';
         }
     </script>
 </body>
 </html>
-
-
