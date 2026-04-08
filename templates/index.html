@@ -3,56 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro de Persona</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <title>Registro de Personal</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f0f2f5; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+        .container { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 100%; max-width: 450px; }
+        h1 { text-align: center; color: #1c1e21; margin-bottom: 20px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; color: #4b4f56; }
+        input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; font-size: 16px; }
+        .btn-main { background-color: #1877f2; color: white; border: none; padding: 12px; border-radius: 6px; width: 100%; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        .btn-main:hover { background-color: #166fe5; }
+        .link { display: block; text-align: center; margin-bottom: 20px; text-decoration: none; color: #0064e0; font-weight: bold; }
+    </style>
 </head>
 <body>
     <div class="container">
         <h1>Registro de Personal</h1>
+        <a href="/administrar" class="link">Ver Registros Guardados</a>
         
-        <a href="/administrar" class="administrar-link">Ver Registros Guardados</a>
-        <div class="separator"></div>
-
-        <form action="/registrar" method="post" id="registroForm">
+        <form action="/registrar" method="post">
             <div class="form-group">
-                <label for="dni">DNI:</label>
-                <input type="text" id="dni" name="dni" required placeholder="Ingrese DNI">
+                <label>DNI:</label>
+                <input type="text" name="dni" required placeholder="DNI">
             </div>
             <div class="form-group">
-                <label for="nombre">Nombre:</label>
-                <input type="text" id="nombre" name="nombre" required placeholder="Ingrese Nombre">
+                <label>Nombre:</label>
+                <input type="text" name="nombre" required placeholder="Nombre">
             </div>
             <div class="form-group">
-                <label for="apellido">Apellido:</label>
-                <input type="text" id="apellido" name="apellido" required placeholder="Ingrese Apellido">
+                <label>Apellido:</label>
+                <input type="text" name="apellido" required placeholder="Apellido">
             </div>
             <div class="form-group">
-                <label for="direccion">Dirección:</label>
-                <input type="text" id="direccion" name="direccion" placeholder="Calle, Av, Jr.">
+                <label>Dirección:</label>
+                <input type="text" name="direccion" placeholder="Dirección">
             </div>
             <div class="form-group">
-                <label for="telefono">Teléfono:</label>
-                <input type="text" id="telefono" name="telefono" placeholder="999 999 999">
+                <label>Teléfono:</label>
+                <input type="text" name="telefono" placeholder="Teléfono">
             </div>
-            <button type="submit" class="btn-main">Registrar Datos</button>
+            <button type="submit" class="btn-main">Registrar</button>
         </form>
     </div>
-
-    <div id="modal" class="modal-overlay">
-        <div class="modal-content">
-            <span class="close" onclick="cerrarMensaje()">&times;</span>
-            <div class="success-icon">✅</div>
-            <p>¡Procesando Registro!</p>
-        </div>
-    </div>
-
-    <script>
-        document.getElementById('registroForm').onsubmit = function() {
-            document.getElementById('modal').style.display = 'flex';
-        };
-        function cerrarMensaje() {
-            document.getElementById('modal').style.display = 'none';
-        }
-    </script>
 </body>
 </html>
