@@ -2,34 +2,34 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Administrar Personal</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
     <div class="container">
-        <h1>Registros de Personal</h1>
+        <h1>Registros en la Nube</h1>
         <a href="/" class="administrar-link">← Volver al Registro</a>
         <div class="separator"></div>
 
-        {% if registros %}
-        <table border="1" style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+        {% if personas_list %}
+        <table>
             <thead>
                 <tr>
                     <th>DNI</th>
                     <th>Nombre</th>
                     <th>Apellido</th>
-                    <th>Dirección</th>
-                    <th>Teléfono</th>
                     <th>Acción</th>
                 </tr>
             </thead>
             <tbody>
-                {% for persona in registros %}
+                {% for p in personas_list %}
                 <tr>
-                    <td>{{ persona[1] }}</td> <td>{{ persona[2] }}</td> <td>{{ persona[3] }}</td> <td>{{ persona[4] }}</td> <td>{{ persona[5] }}</td> <td>
-                        <form action="{{ url_for('eliminar_registro', dni=persona[1]) }}" method="post">
-                            <button type="submit" class="btn-eliminar" onclick="return confirm('¿Seguro que quieres eliminar?')">Eliminar</button>
+                    <td>{{ p[1] }}</td>
+                    <td>{{ p[2] }}</td>
+                    <td>{{ p[3] }}</td>
+                    <td>
+                        <form action="{{ url_for('eliminar_registro', dni=p[1]) }}" method="POST" style="margin:0;">
+                            <button type="submit" class="btn-eliminar" onclick="return confirm('¿Eliminar?')">Eliminar</button>
                         </form>
                     </td>
                 </tr>
@@ -37,7 +37,7 @@
             </tbody>
         </table>
         {% else %}
-        <p style="text-align: center;">No hay registros todavía.</p>
+        <p style="text-align:center;">No hay registros guardados.</p>
         {% endif %}
     </div>
 </body>

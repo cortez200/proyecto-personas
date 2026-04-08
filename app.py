@@ -2,7 +2,14 @@ from flask import Flask, render_template, request, redirect, url_for, jsonify
 import psycopg2
 import os
 
-app = Flask(__name__, template_folder='templates')
+# Agregamos static_url_path para forzar la ruta de estilos
+app = Flask(__name__, 
+            template_folder='templates', 
+            static_folder='static',
+            static_url_path='/static')
+
+# Esto obliga al navegador a no guardar el diseño viejo en memoria
+app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 
 # --- CONFIGURACIÓN CON TUS DATOS REALES DE RENDER ---
 DB_HOST = 'dpg-d7bbpbqdbo4c73dsa5gg-a.oregon-postgres.render.com'
@@ -13,17 +20,12 @@ DB_PASSWORD = 'piiTTVRlztV0rbErYkaPWPqVtOFIiG2v'
 def conectar_db():
     try:
         conn = psycopg2.connect(
-            dbname=DB_NAME, 
-            user=DB_USER, 
-            password=DB_PASSWORD, 
-            host=DB_HOST
-        )
+            dbname=DB_NAME, user=DB_USER, password=DB_PASSWORD, host=DB_HOST)
         return conn
     except psycopg2.Error as e:
         print("Error al conectar a la base de datos:", e)
         return None
 
-# --- NUEVO: FUNCIÓN PARA CREAR LA TABLA AUTOMÁTICAMENTE ---
 def inicializar_base_de_datos():
     conn = conectar_db()
     if conn:
@@ -46,10 +48,7 @@ def inicializar_base_de_datos():
         except Exception as e:
             print("❌ Error al crear la tabla:", e)
 
-# Ejecutamos la creación de la tabla al arrancar la app
 inicializar_base_de_datos()
-
-# --- RUTAS ---
 
 @app.route('/')
 def index():
@@ -81,8 +80,10 @@ def administrar():
         cursor = conn.cursor()
         cursor.execute("SELECT * FROM personas ORDER BY apellido")
         registros = cursor.fetchall()
+        cursor.close()
         conn.close()
-    return render_template('administrar.html', registros=registros)
+    # Cambié el nombre a 'personas_list' para evitar conflictos con palabras reservadas
+    return render_template('administrar.html', personas_list=registros)
 
 @app.route('/eliminar/<dni>', methods=['POST'])
 def eliminar_registro(dni):
@@ -91,6 +92,7 @@ def eliminar_registro(dni):
         cursor = conn.cursor()
         cursor.execute("DELETE FROM personas WHERE dni = %s", (dni,))
         conn.commit()
+        cursor.close()
         conn.close()
     return redirect(url_for('administrar'))
 
