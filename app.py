@@ -2,16 +2,15 @@ from flask import Flask, render_template, request, redirect, url_for, jsonify
 import psycopg2
 import os
 
-# Agregamos static_url_path para forzar la ruta de estilos
 app = Flask(__name__, 
             template_folder='templates', 
             static_folder='static',
             static_url_path='/static')
 
-# Esto obliga al navegador a no guardar el diseño viejo en memoria
+# Evita que el navegador guarde versiones viejas del diseño
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 
-# --- CONFIGURACIÓN CON TUS DATOS REALES DE RENDER ---
+# --- CONFIGURACIÓN DE CONEXIÓN (RENDER EXTERNAL URL) ---
 DB_HOST = 'dpg-d7bbpbqdbo4c73dsa5gg-a.oregon-postgres.render.com'
 DB_NAME = 'proyecto_personas_ts11'
 DB_USER = 'proyecto_personas_ts11_user'
@@ -20,10 +19,14 @@ DB_PASSWORD = 'piiTTVRlztV0rbErYkaPWPqVtOFIiG2v'
 def conectar_db():
     try:
         conn = psycopg2.connect(
-            dbname=DB_NAME, user=DB_USER, password=DB_PASSWORD, host=DB_HOST)
+            dbname=DB_NAME, 
+            user=DB_USER, 
+            password=DB_PASSWORD, 
+            host=DB_HOST
+        )
         return conn
     except psycopg2.Error as e:
-        print("Error al conectar a la base de datos:", e)
+        print("❌ Error de conexión:", e)
         return None
 
 def inicializar_base_de_datos():
@@ -42,13 +45,16 @@ def inicializar_base_de_datos():
                 );
             ''')
             conn.commit()
-            print("✅ Tabla 'personas' verificada/creada con éxito.")
+            print("✅ Tabla 'personas' lista.")
             cursor.close()
             conn.close()
         except Exception as e:
-            print("❌ Error al crear la tabla:", e)
+            print("❌ Error al crear tabla:", e)
 
+# Ejecutar al encender la app
 inicializar_base_de_datos()
+
+# --- RUTAS ---
 
 @app.route('/')
 def index():
@@ -64,13 +70,22 @@ def registrar():
     
     conn = conectar_db()
     if conn:
-        cursor = conn.cursor()
-        cursor.execute("INSERT INTO personas (dni, nombre, apellido, direccion, telefono) VALUES (%s, %s, %s, %s, %s)",
-                       (dni, nombre, apellido, direccion, telefono))
-        conn.commit()
-        conn.close()
+        try:
+            cursor = conn.cursor()
+            cursor.execute("""
+                INSERT INTO personas (dni, nombre, apellido, direccion, telefono) 
+                VALUES (%s, %s, %s, %s, %s)
+            """, (dni, nombre, apellido, direccion, telefono))
+            conn.commit()
+            cursor.close()
+            conn.close()
+            return redirect(url_for('administrar'))
+        except psycopg2.IntegrityError:
+            return "<h3>Error: El DNI ya está registrado. <a href='/'>Volver</a></h3>"
+        except Exception as e:
+            return f"<h3>Error inesperado: {str(e)} <a href='/'>Volver</a></h3>"
     
-    return redirect(url_for('administrar'))
+    return "Error de conexión con la base de datos."
 
 @app.route('/administrar')
 def administrar():
@@ -78,11 +93,11 @@ def administrar():
     registros = []
     if conn:
         cursor = conn.cursor()
-        cursor.execute("SELECT * FROM personas ORDER BY apellido")
+        # Seleccionamos las columnas fijas para evitar errores de índice en el HTML
+        cursor.execute("SELECT dni, nombre, apellido, direccion, telefono FROM personas ORDER BY apellido")
         registros = cursor.fetchall()
         cursor.close()
         conn.close()
-    # Cambié el nombre a 'personas_list' para evitar conflictos con palabras reservadas
     return render_template('administrar.html', personas_list=registros)
 
 @app.route('/eliminar/<dni>', methods=['POST'])

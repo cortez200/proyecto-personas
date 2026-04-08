@@ -2,45 +2,46 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Administrar - ADRIAN</title>
+    <title>Administrar Personal</title>
     <style>
-        body { font-family: sans-serif; padding: 50px; background: #eee; }
-        .box { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        body { font-family: Arial, sans-serif; background: #f4f4f4; padding: 20px; }
+        .box { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); max-width: 900px; margin: auto; }
         table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { padding: 10px; border: 1px solid #ddd; text-align: left; }
+        th, td { padding: 12px; border: 1px solid #ddd; text-align: left; }
         th { background: #007bff; color: white; }
-        .btn-del { color: white; background: red; border: none; padding: 5px 10px; cursor: pointer; border-radius: 4px; }
+        .btn-red { background: #d9534f; color: white; border: none; padding: 5px 10px; cursor: pointer; border-radius: 4px; }
     </style>
 </head>
 <body>
     <div class="box">
-        <h1>Lista de Personas</h1>
-        <a href="/">Volver al registro</a>
+        <h1>Registros de Personal</h1>
+        <a href="/">← Volver al Formulario</a>
         <hr>
+        {% if personas_list %}
         <table>
             <thead>
                 <tr>
                     <th>DNI</th>
                     <th>Nombre</th>
                     <th>Apellido</th>
-                    <th>Acción</th>
+                    <th>Acciones</th>
                 </tr>
             </thead>
             <tbody>
                 {% for p in personas_list %}
                 <tr>
-                    <td>{{ p[1] }}</td>
-                    <td>{{ p[2] }}</td>
-                    <td>{{ p[3] }}</td>
-                    <td>
-                        <form action="{{ url_for('eliminar_registro', dni=p[1]) }}" method="POST">
-                            <button type="submit" class="btn-del" onclick="return confirm('¿Eliminar?')">Eliminar</button>
+                    <td>{{ p[0] }}</td> <td>{{ p[1] }}</td> <td>{{ p[2] }}</td> <td>
+                        <form action="{{ url_for('eliminar_registro', dni=p[0]) }}" method="POST">
+                            <button type="submit" class="btn-red" onclick="return confirm('¿Eliminar?')">Eliminar</button>
                         </form>
                     </td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
+        {% else %}
+        <p>No hay registros guardados.</p>
+        {% endif %}
     </div>
 </body>
 </html>
