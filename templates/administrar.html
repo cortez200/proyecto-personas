@@ -1,17 +1,21 @@
 <!DOCTYPE html>
-<html lang="es">
+<html>
 <head>
     <meta charset="UTF-8">
-    <title>Administrar Personal</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <title>Administrar</title>
+    <style>
+        body { font-family: sans-serif; padding: 50px; background: #eee; }
+        .box { background: white; padding: 20px; border-radius: 10px; shadow: 0 0 10px rgba(0,0,0,0.1); }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 10px; border: 1px solid #ddd; text-align: left; }
+        th { background: #007bff; color: white; }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Registros en la Nube</h1>
-        <a href="/" class="administrar-link">← Volver al Registro</a>
-        <div class="separator"></div>
-
-        {% if personas_list %}
+    <div class="box">
+        <h1>Lista de Personas</h1>
+        <a href="/">Volver al registro</a>
+        <hr>
         <table>
             <thead>
                 <tr>
@@ -28,17 +32,14 @@
                     <td>{{ p[2] }}</td>
                     <td>{{ p[3] }}</td>
                     <td>
-                        <form action="{{ url_for('eliminar_registro', dni=p[1]) }}" method="POST" style="margin:0;">
-                            <button type="submit" class="btn-eliminar" onclick="return confirm('¿Eliminar?')">Eliminar</button>
+                        <form action="/eliminar/{{ p[1] }}" method="POST">
+                            <button type="submit" style="color:red;">Eliminar</button>
                         </form>
                     </td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
-        {% else %}
-        <p style="text-align:center;">No hay registros guardados.</p>
-        {% endif %}
     </div>
 </body>
 </html>
